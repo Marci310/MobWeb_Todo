@@ -13,9 +13,9 @@ class DonePage extends StatelessWidget {
     if (finished.isEmpty) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Tasks Done'),
+            title: const Text('Tasks Done'),
           ),
-          body: Center(
+          body: const Center(
             child: Text('No Tasks Done'),
           ));
     }
