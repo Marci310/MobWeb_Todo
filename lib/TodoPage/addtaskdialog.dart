@@ -12,14 +12,14 @@ class AddTaskDialog extends StatefulWidget {
 class _AddTaskDialogState extends State<AddTaskDialog> {
   final _nameController = TextEditingController();
   final _desriptionController = TextEditingController();
-  final _dateController = TextEditingController();
+  String date =
+      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
 
   ///Overriding the destructor so it fits our own scenario
   @override
   void dispose() {
     _nameController.dispose();
     _desriptionController.dispose();
-    _dateController.dispose();
     super.dispose();
   }
 
@@ -41,17 +41,22 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
           ),
 
           ///Description of the task Textfield
-          TextField(
-            controller: _desriptionController,
-            decoration: InputDecoration(
-              labelText: 'Description',
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: TextField(
+              controller: _desriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+              ),
             ),
           ),
 
           ///Due Date of the task button
-          GestureDetector(
-            onTap: () async {
+          ElevatedButton(
+            onPressed: () async {
               final initialDate = DateTime.now();
+
+              ///Sets up the date picker from todays date until the year 2100
               final newDate = await showDatePicker(
                 context: context,
                 initialDate: initialDate,
@@ -61,20 +66,18 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               if (newDate != null) {
                 ///Sets the controller up with the variable picked
                 setState(() {
-                  _dateController.text = newDate.toString();
+                  date = '${newDate.year}-${newDate.month}-${newDate.day}';
                 });
               }
             },
-            child: AbsorbPointer(
-              ///writes out the selected date
-              child: TextField(
-                controller: _dateController,
-                decoration: InputDecoration(
-                  labelText: 'Due Date',
-                ),
-              ),
-            ),
+            child: Text('Select Date'),
           ),
+
+          ///writes out the selected date
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Selected date: $date'),
+          )
         ],
       ),
       actions: [
@@ -89,7 +92,6 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
           onPressed: () {
             final name = _nameController.text;
             final description = _desriptionController.text;
-            final date = _dateController.text;
             appstate.addTask(Task(name, description, date));
             Navigator.of(context).pop();
           },
